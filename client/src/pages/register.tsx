@@ -16,7 +16,7 @@ export const Register: React.FC = () => {
         autoComplete="off"
         onSubmit={async (e) => {
           e.preventDefault();
-          console.log(email, username);
+          // console.log(email, username);
           const response = await register({
             variables: {
               email,

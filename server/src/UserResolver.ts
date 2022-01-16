@@ -16,11 +16,15 @@ import { createAccessToken, createRefreshToken } from "./auth";
 import { isAuth } from "./isAuth";
 import { sendRefreshToken } from "./sendRefreshToken";
 import { getConnection } from "typeorm";
+import { verify } from "jsonwebtoken";
+import { ACCESS_TOKEN_SECRET } from "./constants";
 
 @ObjectType()
 class LoginResponse {
   @Field()
   accessToken: string;
+  // @Field(() => User)
+  // user: User;
 }
 
 @Resolver()
@@ -33,13 +37,31 @@ export class UserResolver {
   @Query(() => String)
   @UseMiddleware(isAuth)
   bye(@Ctx() { payload }: MyContext) {
-    console.log(payload);
-    return `bye ${payload!.userId}`;
+    // console.log(payload);
+    return `Bye user with id ${payload!.userId}`;
   }
 
   @Query(() => [User])
   users() {
     return User.find();
+  }
+
+  @Query(() => User, { nullable: true })
+  me(@Ctx() context: MyContext) {
+    const authorization = context.req.headers["authorization"];
+
+    if (!authorization) {
+      return null;
+    }
+
+    try {
+      const token = authorization.split(" ")[1];
+      const payload: any = verify(token, ACCESS_TOKEN_SECRET);
+      return User.findOne(payload.userId);
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
   }
 
   @Mutation(() => Boolean)
@@ -84,5 +106,12 @@ export class UserResolver {
 
     sendRefreshToken(res, createRefreshToken(user));
     return createAccessToken(user);
+  }
+
+  @Mutation(() => Boolean)
+  async logout(@Ctx() { res }: MyContext) {
+    sendRefreshToken(res, "");
+
+    return true;
   }
 }

@@ -26,6 +26,7 @@ const main = async () => {
   app.post("/refresh_token", async (req, res) => {
     //console.log(req.headers);
     const token = req.cookies.jid;
+    // console.log(token);
     if (!token) {
       return res.send({ ok: false, accessToken: "" });
     }
@@ -33,6 +34,7 @@ const main = async () => {
     let payload: any = null;
     try {
       payload = verify(token, REFRESH_TOKEN_SECRET);
+      // console.log(payload);
     } catch (err) {
       console.log(err);
       return res.send({ ok: false, accessToken: "" });
