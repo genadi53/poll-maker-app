@@ -5,6 +5,7 @@ import { Home } from "./pages/home";
 import { Bye } from "./pages/bye";
 import { Login } from "./pages/login";
 import { Register } from "./pages/register";
+import { Header } from "./header";
 // import { useHelloQuery } from "./generated/graphql";
 // import { useQuery } from "@apollo/client";
 // import { gql } from "apollo-boost";
@@ -12,21 +13,7 @@ import { Register } from "./pages/register";
 const RoutesComponent: React.FC = () => {
   return (
     <BrowserRouter>
-      <>
-        <div>
-          <Link to="/">Home</Link>
-        </div>
-        <div>
-          <Link to="/register">Register</Link>
-        </div>
-        <div>
-          <Link to="/login">Login</Link>
-        </div>
-        <div>
-          <Link to="/bye">Bye</Link>
-        </div>
-        <hr />
-      </>
+      <Header />
       <Routes>
         <Route path="/" element={<Home />}></Route>
         <Route path="/register" element={<Register />}></Route>

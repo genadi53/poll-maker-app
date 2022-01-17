@@ -16,8 +16,9 @@ export const isAuth: MiddlewareFn<MyContext> = (
 
   try {
     const token = authorization.split(" ")[1];
-    // console.log(authorization);
-    // console.log(token);
+    console.log(authorization);
+    console.log("***** ******");
+    console.log(token);
     const payload = verify(token, ACCESS_TOKEN_SECRET);
     // console.log(payload);
     context.payload = payload as any;

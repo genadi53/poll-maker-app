@@ -23,8 +23,9 @@ import { ACCESS_TOKEN_SECRET } from "./constants";
 class LoginResponse {
   @Field()
   accessToken: string;
-  // @Field(() => User)
-  // user: User;
+
+  @Field(() => User)
+  user: User;
 }
 
 @Resolver()
@@ -105,13 +106,12 @@ export class UserResolver {
     if (!valid) throw new Error("invalid password");
 
     sendRefreshToken(res, createRefreshToken(user));
-    return createAccessToken(user);
+    return { accessToken: createAccessToken(user), user };
   }
 
   @Mutation(() => Boolean)
   async logout(@Ctx() { res }: MyContext) {
     sendRefreshToken(res, "");
-
     return true;
   }
 }
