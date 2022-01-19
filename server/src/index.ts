@@ -5,13 +5,17 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import { ApolloServer } from "apollo-server-express";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
-import { UserResolver } from "./UserResolver";
 import { buildSchema } from "type-graphql";
 import { verify } from "jsonwebtoken";
-import { REFRESH_TOKEN_SECRET } from "./constants";
+
 import { User } from "./entity/User";
+import { UserResolver } from "./resolvers/UserResolver";
+import { VoteResolver } from "./resolvers/VoteResolver";
+import { PoolResolver } from "./resolvers/PoolResolver";
+import { RoleResolver } from "./resolvers/RoleResolver";
 import { createAccessToken, createRefreshToken } from "./auth";
 import { sendRefreshToken } from "./sendRefreshToken";
+import { REFRESH_TOKEN_SECRET } from "./constants";
 
 const main = async () => {
   const app = express();
@@ -58,7 +62,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [UserResolver],
+      resolvers: [UserResolver, VoteResolver, PoolResolver, RoleResolver],
     }),
     context: ({ req, res }) => ({ req, res }),
     plugins: [ApolloServerPluginLandingPageGraphQLPlayground],
