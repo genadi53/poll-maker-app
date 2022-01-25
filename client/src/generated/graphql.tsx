@@ -15,6 +15,12 @@ export type Scalars = {
   Float: number;
 };
 
+export type Choice = {
+  __typename?: 'Choice';
+  id: Scalars['Int'];
+  text: Scalars['String'];
+};
+
 export type LoginResponse = {
   __typename?: 'LoginResponse';
   accessToken: Scalars['String'];
@@ -23,10 +29,18 @@ export type LoginResponse = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createPool?: Maybe<Pool>;
   login: LoginResponse;
   logout: Scalars['Boolean'];
   register: Scalars['Boolean'];
   revokeRefreshTokensForUser: Scalars['Boolean'];
+};
+
+
+export type MutationCreatePoolArgs = {
+  choicesOptions: Scalars['String'];
+  expirationDateTime: Scalars['String'];
+  question: Scalars['String'];
 };
 
 
@@ -47,18 +61,45 @@ export type MutationRevokeRefreshTokensForUserArgs = {
   userId: Scalars['Int'];
 };
 
+export type Pool = {
+  __typename?: 'Pool';
+  choices: Array<Choice>;
+  createdAt: Scalars['String'];
+  creator: User;
+  expirationDateTime: Scalars['String'];
+  id: Scalars['Int'];
+  question: Scalars['String'];
+  updatedAt: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
   bye: Scalars['String'];
+  findPoolByCreatorId?: Maybe<Array<Pool>>;
+  findPoolById?: Maybe<Pool>;
   hello: Scalars['String'];
   me?: Maybe<User>;
+  pools?: Maybe<Array<Pool>>;
   users: Array<User>;
+};
+
+
+export type QueryFindPoolByCreatorIdArgs = {
+  user_id: Scalars['Float'];
+};
+
+
+export type QueryFindPoolByIdArgs = {
+  id: Scalars['Float'];
 };
 
 export type User = {
   __typename?: 'User';
+  createdAt: Scalars['String'];
   email: Scalars['String'];
   id: Scalars['Int'];
+  pools: Array<Pool>;
+  updatedAt: Scalars['String'];
   username: Scalars['String'];
 };
 
@@ -66,6 +107,15 @@ export type ByeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ByeQuery = { __typename?: 'Query', bye: string };
+
+export type CreatePoolMutationVariables = Exact<{
+  question: Scalars['String'];
+  choicesOptions: Scalars['String'];
+  expirationDateTime: Scalars['String'];
+}>;
+
+
+export type CreatePoolMutation = { __typename?: 'Mutation', createPool?: { __typename?: 'Pool', id: number, question: string, expirationDateTime: string, choices: Array<{ __typename?: 'Choice', id: number, text: string }> } | null | undefined };
 
 export type HelloQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -137,6 +187,51 @@ export function useByeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ByeQue
 export type ByeQueryHookResult = ReturnType<typeof useByeQuery>;
 export type ByeLazyQueryHookResult = ReturnType<typeof useByeLazyQuery>;
 export type ByeQueryResult = Apollo.QueryResult<ByeQuery, ByeQueryVariables>;
+export const CreatePoolDocument = gql`
+    mutation CreatePool($question: String!, $choicesOptions: String!, $expirationDateTime: String!) {
+  createPool(
+    question: $question
+    choicesOptions: $choicesOptions
+    expirationDateTime: $expirationDateTime
+  ) {
+    id
+    question
+    expirationDateTime
+    choices {
+      id
+      text
+    }
+  }
+}
+    `;
+export type CreatePoolMutationFn = Apollo.MutationFunction<CreatePoolMutation, CreatePoolMutationVariables>;
+
+/**
+ * __useCreatePoolMutation__
+ *
+ * To run a mutation, you first call `useCreatePoolMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePoolMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPoolMutation, { data, loading, error }] = useCreatePoolMutation({
+ *   variables: {
+ *      question: // value for 'question'
+ *      choicesOptions: // value for 'choicesOptions'
+ *      expirationDateTime: // value for 'expirationDateTime'
+ *   },
+ * });
+ */
+export function useCreatePoolMutation(baseOptions?: Apollo.MutationHookOptions<CreatePoolMutation, CreatePoolMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreatePoolMutation, CreatePoolMutationVariables>(CreatePoolDocument, options);
+      }
+export type CreatePoolMutationHookResult = ReturnType<typeof useCreatePoolMutation>;
+export type CreatePoolMutationResult = Apollo.MutationResult<CreatePoolMutation>;
+export type CreatePoolMutationOptions = Apollo.BaseMutationOptions<CreatePoolMutation, CreatePoolMutationVariables>;
 export const HelloDocument = gql`
     query Hello {
   hello

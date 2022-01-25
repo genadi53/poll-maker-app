@@ -1,0 +1,19 @@
+mutation CreatePool(
+  $question: String!
+  $choicesOptions: String!
+  $expirationDateTime: String!
+) {
+  createPool(
+    question: $question
+    choicesOptions: $choicesOptions
+    expirationDateTime: $expirationDateTime
+  ) {
+    id
+    question
+    expirationDateTime
+    choices {
+      id
+      text
+    }
+  }
+}

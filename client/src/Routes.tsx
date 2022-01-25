@@ -6,6 +6,7 @@ import { Bye } from "./pages/bye";
 import { Login } from "./pages/login";
 import { Register } from "./pages/register";
 import { Header } from "./header";
+import { CreatePool } from "./pages/createPool";
 // import { useHelloQuery } from "./generated/graphql";
 // import { useQuery } from "@apollo/client";
 // import { gql } from "apollo-boost";
@@ -19,6 +20,7 @@ const RoutesComponent: React.FC = () => {
         <Route path="/register" element={<Register />}></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/bye" element={<Bye />}></Route>
+        <Route path="/create-pool" element={<CreatePool />}></Route>
       </Routes>
     </BrowserRouter>
   );

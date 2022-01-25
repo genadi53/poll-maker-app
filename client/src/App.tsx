@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, createContext } from "react";
 import { setAccessToken } from "./accessToken";
 import RoutesComponent from "./Routes";
 
 export const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState(null);
+  const UserContext = createContext({ currentUser, setCurrentUser });
 
   useEffect(() => {
     fetch("http://localhost:4000/refresh_token", {
@@ -19,5 +21,9 @@ export const App: React.FC = () => {
   }, []);
 
   if (loading) return <>Loading...</>;
-  return <RoutesComponent />;
+  return (
+    <UserContext.Provider value={{ currentUser, setCurrentUser }}>
+      <RoutesComponent />;
+    </UserContext.Provider>
+  );
 };
