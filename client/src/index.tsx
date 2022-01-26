@@ -36,11 +36,13 @@ const requestLink = new ApolloLink(
           //localStorage.getItem("token");
           console.log("accessToken");
           console.log(accessToken);
+          // console.log(accessToken));
           // return the headers to the context so httpLink can read them
           oper.setContext({
             headers: {
               authorization: accessToken
-                ? `bearer ${Object.values(accessToken)[0]}`
+                ? // ? `bearer ${Object.values(accessToken)[0]}`
+                  `bearer ${accessToken}`
                 : "",
             },
           });

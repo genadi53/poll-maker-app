@@ -28,7 +28,7 @@ export const Header: React.FC = () => {
       </div>
     );
   } else {
-    body = <div>not loged in</div>;
+    body = <div>not loged in {JSON.stringify(data)}</div>;
   }
 
   return (
@@ -41,6 +41,9 @@ export const Header: React.FC = () => {
       </div>
       <div>
         <Link to="/login">Login</Link>
+      </div>
+      <div>
+        <Link to="/create-pool">Create Pool</Link>
       </div>
       <div>
         <Link to="/bye">Bye</Link>

@@ -23,7 +23,7 @@ export const App: React.FC = () => {
   if (loading) return <>Loading...</>;
   return (
     <UserContext.Provider value={{ currentUser, setCurrentUser }}>
-      <RoutesComponent />;
+      <RoutesComponent />
     </UserContext.Provider>
   );
 };
