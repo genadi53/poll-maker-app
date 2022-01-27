@@ -56,8 +56,20 @@ export const CreatePool: React.FC = () => {
       <form
         onSubmit={async (e) => {
           e.preventDefault();
-          const choicesStr = "";
-          choices.forEach((c) => choicesStr.concat(c.text).concat("-"));
+
+          let choicesStr = "";
+          let idx = 0;
+          for (let c of choices) {
+            if (idx === choices.length - 1) {
+              choicesStr = choicesStr.concat(c.text);
+            } else {
+              choicesStr = choicesStr.concat(c.text).concat("-");
+              idx++;
+            }
+          }
+
+          console.log("choicesStr");
+          console.log(choicesStr);
 
           if (!data || loading) {
             console.log("F");
