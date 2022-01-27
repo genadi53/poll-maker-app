@@ -85,12 +85,12 @@ export type Query = {
 
 
 export type QueryFindPoolByCreatorIdArgs = {
-  user_id: Scalars['Float'];
+  user_id: Scalars['Int'];
 };
 
 
 export type QueryFindPoolByIdArgs = {
-  id: Scalars['Float'];
+  id: Scalars['Int'];
 };
 
 export type User = {
@@ -117,6 +117,13 @@ export type CreatePoolMutationVariables = Exact<{
 
 export type CreatePoolMutation = { __typename?: 'Mutation', createPool?: { __typename?: 'Pool', id: number, question: string, expirationDateTime: string, choices: Array<{ __typename?: 'Choice', id: number, text: string }> } | null | undefined };
 
+export type FindPoolByIdQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type FindPoolByIdQuery = { __typename?: 'Query', findPoolById?: { __typename?: 'Pool', question: string, expirationDateTime: string, choices: Array<{ __typename?: 'Choice', id: number, text: string }>, creator: { __typename?: 'User', email: string, username: string } } | null | undefined };
+
 export type HelloQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -139,6 +146,11 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: number, email: string, username: string } | null | undefined };
+
+export type PoolsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PoolsQuery = { __typename?: 'Query', pools?: Array<{ __typename?: 'Pool', question: string, expirationDateTime: string, choices: Array<{ __typename?: 'Choice', id: number, text: string }>, creator: { __typename?: 'User', email: string, username: string } }> | null | undefined };
 
 export type RegisterMutationVariables = Exact<{
   email: Scalars['String'];
@@ -232,6 +244,50 @@ export function useCreatePoolMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreatePoolMutationHookResult = ReturnType<typeof useCreatePoolMutation>;
 export type CreatePoolMutationResult = Apollo.MutationResult<CreatePoolMutation>;
 export type CreatePoolMutationOptions = Apollo.BaseMutationOptions<CreatePoolMutation, CreatePoolMutationVariables>;
+export const FindPoolByIdDocument = gql`
+    query FindPoolById($id: Int!) {
+  findPoolById(id: $id) {
+    question
+    choices {
+      id
+      text
+    }
+    expirationDateTime
+    creator {
+      email
+      username
+    }
+  }
+}
+    `;
+
+/**
+ * __useFindPoolByIdQuery__
+ *
+ * To run a query within a React component, call `useFindPoolByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindPoolByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindPoolByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useFindPoolByIdQuery(baseOptions: Apollo.QueryHookOptions<FindPoolByIdQuery, FindPoolByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindPoolByIdQuery, FindPoolByIdQueryVariables>(FindPoolByIdDocument, options);
+      }
+export function useFindPoolByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindPoolByIdQuery, FindPoolByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindPoolByIdQuery, FindPoolByIdQueryVariables>(FindPoolByIdDocument, options);
+        }
+export type FindPoolByIdQueryHookResult = ReturnType<typeof useFindPoolByIdQuery>;
+export type FindPoolByIdLazyQueryHookResult = ReturnType<typeof useFindPoolByIdLazyQuery>;
+export type FindPoolByIdQueryResult = Apollo.QueryResult<FindPoolByIdQuery, FindPoolByIdQueryVariables>;
 export const HelloDocument = gql`
     query Hello {
   hello
@@ -369,6 +425,49 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const PoolsDocument = gql`
+    query Pools {
+  pools {
+    question
+    choices {
+      id
+      text
+    }
+    expirationDateTime
+    creator {
+      email
+      username
+    }
+  }
+}
+    `;
+
+/**
+ * __usePoolsQuery__
+ *
+ * To run a query within a React component, call `usePoolsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePoolsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePoolsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function usePoolsQuery(baseOptions?: Apollo.QueryHookOptions<PoolsQuery, PoolsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PoolsQuery, PoolsQueryVariables>(PoolsDocument, options);
+      }
+export function usePoolsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PoolsQuery, PoolsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PoolsQuery, PoolsQueryVariables>(PoolsDocument, options);
+        }
+export type PoolsQueryHookResult = ReturnType<typeof usePoolsQuery>;
+export type PoolsLazyQueryHookResult = ReturnType<typeof usePoolsLazyQuery>;
+export type PoolsQueryResult = Apollo.QueryResult<PoolsQuery, PoolsQueryVariables>;
 export const RegisterDocument = gql`
     mutation Register($email: String!, $username: String!, $password: String!) {
   register(email: $email, username: $username, password: $password)

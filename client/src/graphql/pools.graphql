@@ -1,0 +1,14 @@
+query Pools {
+  pools {
+    question
+    choices {
+      id
+      text
+    }
+    expirationDateTime
+    creator {
+      email
+      username
+    }
+  }
+}

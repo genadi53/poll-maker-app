@@ -1,0 +1,14 @@
+query FindPoolById($id: Int!) {
+  findPoolById(id: $id) {
+    question
+    choices {
+      id
+      text
+    }
+    expirationDateTime
+    creator {
+      email
+      username
+    }
+  }
+}

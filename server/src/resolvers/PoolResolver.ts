@@ -1,4 +1,4 @@
-import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Ctx, Int, Mutation, Query, Resolver } from "type-graphql";
 import { Pool } from "../entity/Pool";
 import { Choice } from "../entity/Choice";
 import { User } from "../entity/User";
@@ -11,11 +11,13 @@ import { getConnection } from "typeorm";
 export class PoolResolver {
   @Query(() => [Pool], { nullable: true })
   pools() {
-    return Pool.find();
+    return Pool.find({ relations: ["choices", "creator"] });
   }
 
   @Query(() => Pool, { nullable: true })
-  async findPoolById(@Arg("id") id: number): Promise<Pool | undefined> {
+  async findPoolById(
+    @Arg("id", () => Int) id: number
+  ): Promise<Pool | undefined> {
     // return Pool.findOne({ id: id }, { relations: ["users"] });
 
     const res = await getConnection()
@@ -23,13 +25,14 @@ export class PoolResolver {
       .select("pool")
       .from(Pool, "pool")
       .leftJoinAndSelect("pool.creator", "users")
+      .leftJoinAndSelect("pool.choices", "choices")
       .where('pool."id" = :id', { id })
       .getOne();
     return res;
   }
 
   @Query(() => [Pool], { nullable: true })
-  async findPoolByCreatorId(@Arg("user_id") user_id: number) {
+  async findPoolByCreatorId(@Arg("user_id", () => Int) user_id: number) {
     const user = await User.findOne({ id: user_id });
     return Pool.find({
       where: {
@@ -45,6 +48,7 @@ export class PoolResolver {
     @Arg("expirationDateTime") expirationDateTime: string,
     @Ctx() context: MyContext
   ) {
+    console.log(choicesOptions);
     // check for loged in user
     const authorization = context.req.headers["authorization"];
     if (!authorization) {
@@ -93,7 +97,7 @@ export class PoolResolver {
         //   .into(Choice)
         //   .values([{ pool, text: choicesArray[i] }])
         //   .execute();
-        console.log(i);
+        // console.log(i);
         console.log(c);
         ch.push(c as any);
       }
@@ -102,9 +106,7 @@ export class PoolResolver {
       console.log(err);
     }
 
-    console.log("2");
     console.log(ch);
-
     pool.choices = ch;
 
     console.log(pool);
